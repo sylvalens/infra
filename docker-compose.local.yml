@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: forest_db
+    environment:
+      POSTGRES_USER: forest
+      POSTGRES_PASSWORD: forest
+      POSTGRES_DB: forest
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forest -d forest"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  raster-analysis:
+    build:
+      context: ../raster
+      dockerfile: Dockerfile
+    container_name: raster_analysis
+    environment:
+      - FORMS_T_PATH=/data/FORMS-T
+      - GFC_PATH=/data/global-forest-change
+      - LIDAR_PATH=/data/lidar-hd
+      - CORS_ORIGINS=["http://localhost:3000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../forest-res:/data:ro
+    restart: unless-stopped
+
+volumes:
+  pgdata:
