@@ -34,3 +34,5 @@ services:
 
 volumes:
   pgdata:
+    name: forest-bd-viewer_pgdata
+    external: true
