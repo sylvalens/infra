@@ -3,9 +3,9 @@ services:
     image: postgis/postgis:16-3.4
     container_name: forest_db_prod
     environment:
-      POSTGRES_USER: forest
-      POSTGRES_PASSWORD: forest
-      POSTGRES_DB: forest
+      POSTGRES_USER: ${DB_USER:-forest}
+      POSTGRES_PASSWORD: ${DB_PASS:-forest}
+      POSTGRES_DB: ${DB_NAME:-forest}
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -42,9 +42,9 @@ services:
       - NODE_ENV=production
       - DB_HOST=db
       - DB_PORT=5432
-      - DB_USER=forest
-      - DB_PASS=forest
-      - DB_NAME=forest
+      - DB_USER=${DB_USER:-forest}
+      - DB_PASS=${DB_PASS:-forest}
+      - DB_NAME=${DB_NAME:-forest}
       - JWT_SECRET=${JWT_SECRET:-production_secret_change_me}
       - JWT_EXPIRES_IN=1d
       - RASTER_TIMEOUT_MS=15000
